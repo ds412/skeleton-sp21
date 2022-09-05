@@ -125,4 +125,67 @@ public class LinkedListDequeTest {
 
 
     }
+
+    /* Utility method for printing out empty checks. */
+    public static boolean checkEmpty(boolean expected, boolean actual) {
+        if (expected != actual) {
+            System.out.println("isEmpty() returned " + actual + ", but expected: " + expected);
+            return false;
+        }
+        return true;
+    }
+
+    /* Utility method for printing out empty checks. */
+    public static boolean checkSize(int expected, int actual) {
+        if (expected != actual) {
+            System.out.println("size() returned " + actual + ", but expected: " + expected);
+            return false;
+        }
+        return true;
+    }
+
+    /* Prints a nice message based on whether a test passed.
+     * The \n means newline. */
+    public static void printTestStatus(boolean passed) {
+        if (passed) {
+            System.out.println("Test passed!\n");
+        } else {
+            System.out.println("Test failed!\n");
+        }
+    }
+
+
+    @Test
+    public void testRemoveFirst() {
+        LinkedListDeque<Integer> input = new LinkedListDeque<>();
+        input.addFirst(1);
+        input.addFirst(2);
+        int result = input.get(0);
+        assertEquals(2, result);
+        int result2 = input.removeFirst();
+        assertEquals(2, result2);
+        int result3 = input.get(0);
+        assertEquals(1, result3);
+    }
+    @Test
+    public void testRemoveLast() {
+        LinkedListDeque<Integer> input = new LinkedListDeque<>();
+        input.addFirst(0);
+        input.removeLast();
+        input.addFirst(9);
+        int result = input.size();
+        assertEquals(1, result);
+        int result2 = input.removeLast();
+        assertEquals(9, result2);
+    }
+
+    @Test
+    public void testgetRecursive() {
+        LinkedListDeque<Integer> input = new LinkedListDeque<>();
+        input.addFirst(0);
+        input.addFirst(1);
+        int result = input.getRecursive(0);
+        assertEquals(1, result);
+    }
+
 }
