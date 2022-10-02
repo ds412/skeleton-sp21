@@ -12,6 +12,7 @@ import java.util.*;
 public class MyHashMap<K, V> implements Map61B<K, V> {
     private static final int INIT_CAPACITY = 16;
     private static final double INIT_LOADFACTOR = .75;
+    private static final int RESIZE_FACTOR = 4;
 
     /**
      * Protected helper class to store key/value pairs
@@ -122,6 +123,28 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         }
     }
 
+    // TODO: Implement the methods of the Map61B Interface below
+    // Your code won't compile until you do so!
+
+    // resize the hashTable to have the given number of buckets, rehashing all of the keys
+    // when resizing, make sure to do so multiplicatively
+    private void resize(int oldCapacity) {
+        int newCapacity = oldCapacity * RESIZE_FACTOR;                  //alter the size of our hashMap
+        Collection<Node>[] temp = buckets;                             //create a temporary copy of our buckets
+        this.clear();                                                  //clear our current hashMap
+        buckets = (Collection<Node>[]) new Collection[newCapacity];    //create buckets according to the new capacity
+        for (int i = 0; i < newCapacity; i++) {                        //create enough buckets
+            buckets[i] = createBucket();
+        }
+        this.capacity = newCapacity;                                    //update hashMap's current capacity
+        for (int i = 0; i < temp.length; i++) {                         //add temp's items
+            for (Node node : temp[i]) {                                 //go through the nodes of the bucket
+                this.put(node.key, node.value);                         //add the nodes to the resized hashMap
+            }
+        }
+    }
+
+    // calculate the hasCode for a key
     private int hashCode(K key){
         if(key ==null) {
             return 0;
@@ -131,15 +154,11 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         }
     }
 
-
-    // TODO: Implement the methods of the Map61B Interface below
-    // Your code won't compile until you do so!
-
-    //TODO:
-    // resize the hashTable to have the given number of buckets, rehashing all of the keys
-    // when resizing, make sure to do so multiplicatively
-    private void resize(int numberOfBuckets){
-
+    //resizes the hashMap if necessary
+    private void checkResize(){
+        if((size()/capacity) >= loadFactor){
+            resize(capacity);
+        }
     }
 
     @Override
@@ -177,8 +196,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
                 return;
             }
         }
-        bucket.add(createNode(key, value));                     //else, create a new node for this KV pair
-        size += 1;                                              //and update the size
+        size += 1;                                              //else, update the size
+        bucket.add(createNode(key, value));                     //and create a new node for this KV pair
+        checkResize();                                          //check if we need to resize
     }
 
 
@@ -220,7 +240,8 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     //returns an Iterator that iterates over the stored keys (may return keys in an any order)
     @Override
     public Iterator<K> iterator() {
-        return null;
+        Set<K> keys = keySet();
+        return keys.iterator();
     }
 
     //OPTIONAL
